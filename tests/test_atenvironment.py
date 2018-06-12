@@ -5,6 +5,7 @@
 
 
 import unittest
+import os
 
 from atenvironment import atenvironment
 
@@ -18,5 +19,12 @@ class TestAtenvironment(unittest.TestCase):
     def tearDown(self):
         """Tear down test fixtures, if any."""
 
-    def test_000_something(self):
-        """Test something."""
+    def test_decorator(self):
+        """Test decorator."""
+        key = next(iter(os.environ.keys()))
+
+        @atenvironment.environment(key)
+        def test(key):
+            return key
+
+        self.assertEqual(test(), os.environ[key])
