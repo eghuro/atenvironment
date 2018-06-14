@@ -27,15 +27,19 @@ Decorator for convenient loading of environment variables
 * Documentation: https://atenvironment.readthedocs.io.
 
 
-Features
+Usage
 --------
 
-* TODO
+Usage
+--------
+Using @environment is as simple as::
 
-Credits
--------
+  from atenvironment.atenvironment import environment
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+  @environment('API_KEY')
+  @environment('TOKEN')
+  def check(a, b, c, key, token):
+      # API_KEY is in key
+      # TOKEN is in token
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+
