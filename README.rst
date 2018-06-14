@@ -33,9 +33,6 @@ Decorator for convenient loading of environment variables
 
 Usage
 --------
-
-Usage
---------
 Using @environment is as simple as::
 
   from atenvironment.atenvironment import environment
