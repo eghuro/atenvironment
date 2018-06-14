@@ -19,6 +19,10 @@
      :alt: Updates
 
 
+.. image:: https://codecov.io/gh/eghuro/atenvironment/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/eghuro/atenvironment
+
+
 
 Decorator for convenient loading of environment variables
 
