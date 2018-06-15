@@ -10,7 +10,7 @@ import random
 import string
 import itertools
 
-from atenvironment.atenvironment import environment, UnknownKeyword, EnvironMiss
+from atenvironment import environment, UnknownKeyword, EnvironMiss
 
 
 class TestAtenvironment(unittest.TestCase):

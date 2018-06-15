@@ -31,14 +31,13 @@ Decorator for convenient loading of environment variables
 * Documentation: https://atenvironment.readthedocs.io.
 
 
-Usage
+Getting started
 --------
 Using @environment is as simple as::
 
-  from atenvironment.atenvironment import environment
+  from atenvironment import environment
 
-  @environment('API_KEY')
-  @environment('TOKEN')
+  @environment('API_KEY', 'TOKEN')
   def check(a, b, c, key, token):
       # API_KEY is in key
       # TOKEN is in token
@@ -47,5 +46,5 @@ Then call the function as::
 
    check(a, b, c)
 
-Environment variables are checked and provided to the function. In case the token is not in environment a ``KeyError`` is raised.
+Environment variables are checked and provided to the function. In case the token is not in environment an ``atenvironment.EnvironMiss`` exception is raised.
 

@@ -4,4 +4,4 @@ Usage
 
 To use @environment in a project::
 
-    import atenvironment
+    from atenvironment import environment
