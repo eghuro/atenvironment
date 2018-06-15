@@ -30,11 +30,6 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     description="Decorator for convenient loading of environment variables",
-    entry_points={
-        'console_scripts': [
-            'atenvironment=atenvironment.cli:main',
-        ],
-    },
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
