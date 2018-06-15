@@ -139,3 +139,13 @@ class TestAtenvironment(unittest.TestCase):
             pass
         else:
             self.assertTrue(False)
+
+    def test_bad_signature(self):
+        class BodyExecuted(BaseException):
+            pass
+
+        @environment(next(iter(os.environ.keys())))
+        def test():
+            raise BodyExecuted()
+
+        self.assertRaises(TypeError, test)

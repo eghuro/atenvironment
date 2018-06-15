@@ -12,10 +12,14 @@ from functools import wraps
 
 
 class UnknownKeyword(BaseException):
+    """Exception indicating unknown keyword was provided to @environment
+       decorator in **kwargs.
+    """
     pass
 
 
 class EnvironMiss(KeyError):
+    """Error indicating key is not present in environment."""
     pass
 
 
@@ -29,6 +33,33 @@ _allowed_keywords = ['onerror']
 
 
 def environment(*value, **kwargs):
+    """@environment decorator.
+
+    Arguments:
+       value   -- one or more environment tokens requested
+
+       onerror -- optional function to be called if any of the environment
+       tokens in value is not present in environment. Such function must take
+       one parameter what is a string value of a missing environment token. If
+       onerror is not set, error is logged and EnvironMiss exception is raised
+
+
+    The decorator checks for presence of environment tokens and if successful
+    reads their values to the function parameters of the decorated function
+    after any called parameters provided.
+
+    Eg. if calling function(a, b, c) that is decorated with @environment('X')
+    the function must be defined as def function(a, b, c, x) and X from the
+    environment is read as last parameter.
+
+    When combining decorators or using multiple environment tokens in one
+    @environment('X', 'Y', 'Z') the values are loaded from the left to the
+    right, from the top to the bottom.
+
+    If a function parameter for @environment is missing, when such function
+    is called a TypeError is raised by the interpreter.
+    """
+
     err = _missing
 
     if kwargs is not None:
