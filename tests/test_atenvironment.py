@@ -8,18 +8,13 @@ import unittest
 import os
 import random
 import string
+import itertools
 
-from atenvironment.atenvironment import environment
+from atenvironment.atenvironment import environment, UnknownKeyword, EnvironMiss
 
 
 class TestAtenvironment(unittest.TestCase):
     """Tests for `atenvironment` package."""
-
-    def setUp(self):
-        """Set up test fixtures, if any."""
-
-    def tearDown(self):
-        """Tear down test fixtures, if any."""
 
     def test_decorator(self):
         """Test decorator."""
@@ -45,4 +40,102 @@ class TestAtenvironment(unittest.TestCase):
         def test(key):
             return key
 
-        self.assertRaises(KeyError, test)
+        self.assertRaises(EnvironMiss, test)
+
+    def test_multiple(self):
+
+        keys = tuple(itertools.islice(os.environ, 3))
+
+        @environment(*keys)
+        def test(a, b, c):
+            return (a, b, c)
+
+        self.assertEqual(tuple([os.environ[key] for key in keys]), test())
+
+        keys = list(keys)
+        @environment(*keys)
+        def test(a, b, c):
+            return (a, b, c)
+
+        self.assertEqual(tuple([os.environ[key] for key in keys]), test())
+
+    def test_multiple_miss(self):
+
+        self.assertTrue('foobar' not in os.environ)
+        keys = list(itertools.islice(os.environ, 3))
+        keys.append('foobar')
+
+        @environment(*keys)
+        def test(a, b, c, d):
+            return [a, b, c, d]
+
+        self.assertRaises(EnvironMiss, test)
+
+        keys = keys[:-1]
+        @environment(*keys, 'foobar')
+        def test(a,b,c,d):
+            return [a, b, c, d]
+
+        self.assertRaises(EnvironMiss, test)
+
+    def test_onerror(self):
+        self.assertTrue('foobar' not in os.environ)
+
+        class TestResult(BaseException):
+            pass
+
+        def err(val):
+            self.assertEqual('foobar', val)
+            raise TestResult
+
+        @environment('foobar', onerror=err)
+        def test(a):
+            return a
+
+        self.assertRaises(TestResult, test)
+
+    def test_onerror_multiple(self):
+        class BodyExecuted(BaseException):
+            pass
+
+        class TestResultA(BaseException):
+            pass
+
+        class TestResultB(BaseException):
+            pass
+
+        def err0(x):
+            raise TestResultA()
+
+        def err1(x):
+            raise TestResultB()
+
+        self.assertTrue('foobar' not in os.environ)
+        a0 = list(itertools.islice(os.environ, 3))
+        a0.append('foobar')
+
+        a1 = tuple(itertools.islice(os.environ, 3))
+
+        @environment(*a0, onerror=err0)
+        @environment(*a1, onerror=err1)
+        def test(a, b, c, d, e, f):
+            raise BodyExecuted()
+
+        self.assertRaises(TestResultA, test)
+
+        @environment(*a1, onerror=err0)
+        @environment(*a0, onerror=err1)
+        def test(a, b, c, d, e, f):
+            raise BodyExecuted()
+
+        self.assertRaises(TestResultB, test)
+
+    def test_unknown_keyword(self):
+        try:
+            @environment(next(iter(os.environ.keys())), foobar=None)
+            def test(a):
+                return a
+        except UnknownKeyword:
+            pass
+        else:
+            self.assertTrue(False)
