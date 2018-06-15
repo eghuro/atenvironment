@@ -1,5 +1,5 @@
 Welcome to @environment's documentation!
-======================================
+========================================
 
 .. toctree::
    :maxdepth: 2

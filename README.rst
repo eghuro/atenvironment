@@ -32,7 +32,7 @@ Decorator for convenient loading of environment variables
 
 
 Getting started
---------
+---------------
 Using @environment is as simple as::
 
   from atenvironment import environment
