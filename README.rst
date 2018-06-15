@@ -43,4 +43,9 @@ Using @environment is as simple as::
       # API_KEY is in key
       # TOKEN is in token
 
+Then call the function as::
+
+   check(a, b, c)
+
+Environment variables are checked and provided to the function. In case the token is not in environment a ``KeyError`` is raised.
 
