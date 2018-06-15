@@ -34,7 +34,8 @@ class TestAtenvironment(unittest.TestCase):
     def test_noKey(self):
         """Test decorator with no key in environment."""
         for _ in range(7):
-            key = ''.join(random.choices(string.ascii_uppercase, k=random.randrange(42)))
+            # key = ''.join(random.choices(string.ascii_uppercase, k=random.randrange(42)))
+            key = ''.join(random.choice(string.ascii_uppercase) for _ in range(random.randrange(42)))
             if key not in os.environ:
                 break
 
