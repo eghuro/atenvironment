@@ -33,6 +33,11 @@ Decorator for convenient loading of environment variables
 
 Getting started
 ---------------
+Install @environment from pip:
+
+   pip install atenvironment
+
+
 Using @environment is as simple as::
 
   from atenvironment import environment
@@ -48,3 +53,5 @@ Then call the function as::
 
 Environment variables are checked and provided to the function. In case the token is not in environment an ``atenvironment.EnvironMiss`` exception is raised.
 
+
+See the docummentation for more details.
