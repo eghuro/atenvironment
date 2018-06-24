@@ -8,6 +8,7 @@ __version__ = '0.1.0'
 
 import os
 import logging
+from inspect import signature
 from functools import wraps
 
 
@@ -23,13 +24,17 @@ class EnvironMiss(KeyError):
     pass
 
 
+class DecoratorSyntaxError(BaseException):
+    pass
+
+
 def _missing(value):
     log = logging.getLogger(__name__)
     log.error("Missing environment variable: %s" % (value))
     raise EnvironMiss(value)
 
 
-_allowed_keywords = ['onerror']
+_allowed_keywords = ['onerror', 'in_self']
 
 
 def environment(*value, **kwargs):
@@ -71,11 +76,19 @@ def environment(*value, **kwargs):
             err = kwargs['onerror']
 
     def environ_decorator(func):
+
         @wraps(func)
         def inner(*args):
             for v in value:
                 if v not in os.environ:
                     err(v)
-            return func(*args, *[os.environ[v] for v in value])
+            if 'in_self' in kwargs:
+                if len(value) != 1:
+                    raise DecoratorSyntaxError(value)
+                if 'self' not in signature(func).parameters:
+                    raise DecoratorSyntaxError()
+                args[0].__dict__[kwargs['in_self']] = os.environ[v]
+                return func(*args)
+            return func(*(list(args) + [os.environ[v] for v in value]))
         return inner
     return environ_decorator

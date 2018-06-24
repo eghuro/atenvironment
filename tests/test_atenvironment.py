@@ -10,7 +10,7 @@ import random
 import string
 import itertools
 
-from atenvironment import environment, UnknownKeyword, EnvironMiss
+from atenvironment import environment, UnknownKeyword, EnvironMiss, DecoratorSyntaxError
 
 
 class TestAtenvironment(unittest.TestCase):
@@ -72,7 +72,7 @@ class TestAtenvironment(unittest.TestCase):
         self.assertRaises(EnvironMiss, test)
 
         keys = keys[:-1]
-        @environment(*keys, 'foobar')
+        @environment('foobar', *keys)
         def test(a,b,c,d):
             return [a, b, c, d]
 
@@ -149,3 +149,40 @@ class TestAtenvironment(unittest.TestCase):
             raise BodyExecuted()
 
         self.assertRaises(TypeError, test)
+
+    def test_class(self):
+        x = next(iter(os.environ.keys()))
+        class TestBed(object):
+            @environment(x, in_self="foo")
+            def __init__(self):
+                pass
+
+        t = TestBed()
+        self.assertEqual(os.environ[x], t.foo)
+
+    def test_class_only_one_key(self):
+        keys = tuple(itertools.islice(os.environ, 3))
+
+        class TestBed(object):
+            @environment(*keys, in_self="foo")
+            def __init__(self):
+                raise BodyExecuted()
+
+        try:
+            TestBed()
+        except DecoratorSyntaxError:
+            pass
+        else:
+            self.assertTrue(False)
+
+    def test_self_no_class(self):
+        a1 = tuple(itertools.islice(os.environ, 1))
+        @environment(*a1, in_self="foo")
+        def test(a):
+            raise BodyExecuted()
+        try:
+            test('a')
+        except DecoratorSyntaxError:
+            pass
+        else:
+            self.assertTrue(False)
