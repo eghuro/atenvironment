@@ -48,6 +48,8 @@ def environment(*value, **kwargs):
        one parameter what is a string value of a missing environment token. If
        onerror is not set, error is logged and EnvironMiss exception is raised
 
+       in_self -- optional variable name in case instance property is to be
+       initialized. There must be only one value in such case.
 
     The decorator checks for presence of environment tokens and if successful
     reads their values to the function parameters of the decorated function
