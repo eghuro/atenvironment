@@ -153,7 +153,7 @@ class TestAtenvironment(unittest.TestCase):
     def test_class(self):
         x = next(iter(os.environ.keys()))
         class TestBed(object):
-            @environment(x, in_self="foo")
+            @environment(x, in_self=["foo"])
             def __init__(self):
                 pass
 
@@ -161,10 +161,12 @@ class TestAtenvironment(unittest.TestCase):
         self.assertEqual(os.environ[x], t.foo)
 
     def test_class_only_one_key(self):
+        class BodyExecuted(BaseException):
+            pass
         keys = tuple(itertools.islice(os.environ, 3))
 
         class TestBed(object):
-            @environment(*keys, in_self="foo")
+            @environment(*keys, in_self=["foo"])
             def __init__(self):
                 raise BodyExecuted()
 
@@ -176,8 +178,10 @@ class TestAtenvironment(unittest.TestCase):
             self.assertTrue(False)
 
     def test_self_no_class(self):
+        class BodyExecuted(BaseException):
+            pass
         a1 = tuple(itertools.islice(os.environ, 1))
-        @environment(*a1, in_self="foo")
+        @environment(*a1, in_self=["foo"])
         def test(a):
             raise BodyExecuted()
         try:

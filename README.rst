@@ -24,7 +24,8 @@
 
 
 
-Decorator for convenient loading of environment variables
+Decorator for convenient loading of environment variables.
+@environment allows you to declare dependencies on environment variables so that it's clear what needs to be set. Also, any error handling is moved away making the code clearer.
 
 
 * Free software: MIT license
@@ -51,7 +52,8 @@ Then call the function as::
 
    check(a, b, c)
 
-Environment variables are checked and provided to the function. In case the token is not in environment an ``atenvironment.EnvironMiss`` exception is raised.
+Environment variables are checked and provided to the function as trailing parameters in order of declaration. In case the token is not in environment an ``atenvironment.EnvironMiss`` exception is raised.
+You can also provide your own error handling function. In addition, some environment variables can be loaded directly into object variable in case instance property is to be initialized.
 
 
 See the docummentation for more details.
