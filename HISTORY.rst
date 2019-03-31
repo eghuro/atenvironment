@@ -2,6 +2,11 @@
 History
 =======
 
+0.2.1 (2019-03-31)
+------------------
+
+* Updated dependencies and supported Python versions.
+
 0.2.0 (2018-06-24)
 ------------------
 
