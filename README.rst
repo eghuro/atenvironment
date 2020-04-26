@@ -57,3 +57,5 @@ You can also provide your own error handling function. In addition, some environ
 
 
 See the docummentation for more details.
+
+[ ~ Dependencies scanned by PyUp.io ~ ]
